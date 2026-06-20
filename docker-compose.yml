@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  fortianalyzer-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fortianalyzer-mcp
+    ports:
+      # HTTP · Streamable HTTP + SSE
+      - "${MCP_HTTP_PORT:-8916}:8916"
+      # HTTPS · Streamable HTTP + SSE (仅在使用自签名证书时启用)
+      # - "${MCP_HTTPS_PORT:-8915}:8915"
+    environment:
+      # FortiAnalyzer 连接（写在 config/config.json 中，此处作为备选）
+      - FORTIANALYZER_HOST=${FORTIANALYZER_HOST:-}
+      - FORTIANALYZER_API_TOKEN=${FORTIANALYZER_API_TOKEN:-}
+      # MCP Server 认证 Token
+      - MCP_AUTH_TOKEN=${MCP_AUTH_TOKEN:-}
+      # 日志
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+    volumes:
+      # 挂载配置文件（config/config.json 含设备连接信息 + MCP 认证 Token）
+      - ./config:/app/config:ro
+      # 挂载证书（HTTPS 模式需要）
+      - ./certs:/app/certs:ro
+      # 日志持久化
+      - ./logs:/app/logs
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8916/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    networks:
+      - fazmcp-net
+
+networks:
+  fazmcp-net:
+    driver: bridge

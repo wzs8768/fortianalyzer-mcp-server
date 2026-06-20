@@ -1,0 +1,18 @@
+[Unit]
+Description=FortiAnalyzer MCP Server (HTTP, SSE + Streamable HTTP)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/wzhongshuai/.hermes/hermes-agent/venv/bin/python3 -m src.fortianalyzer_mcp.server_http --host 0.0.0.0 --port 8915 --transport all
+WorkingDirectory=/home/wzhongshuai/fortianalyzer-mcp-server
+Environment=FORTIANALYZER_MCP_CONFIG=/home/wzhongshuai/fortianalyzer-mcp-server/config/config.json
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=fortianalyzer-mcp
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=default.target

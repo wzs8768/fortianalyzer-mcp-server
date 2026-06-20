@@ -1,0 +1,12 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+.venv
+*.egg-info
+logs/
+config/config.json
+.hermes/
+*.md
+!README.md
+.env

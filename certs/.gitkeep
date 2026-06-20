@@ -1,0 +1,2 @@
+# This file keeps certs/ in git so Docker build succeeds.
+# Replace with real server.crt + server.key for HTTPS.

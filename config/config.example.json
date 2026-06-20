@@ -1,0 +1,35 @@
+{
+  "_comment": "FortiAnalyzer MCP Server — 设备连接与服务器运行配置（示例，请复制为 config.json 后修改）",
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8915,
+    "name": "fortianalyzer-mcp-server",
+    "version": "1.0.0"
+  },
+  "fortianalyzer": {
+    "devices": {
+      "FAZ-01": {
+        "host": "192.168.1.100",
+        "port": 443,
+        "username": "admin",
+        "password": "your-password-here",
+        "api_token": "your-api-token-here",
+        "adom": "root",
+        "verify_ssl": false,
+        "timeout": 60
+      }
+    }
+  },
+  "auth": {
+    "require_auth": true,
+    "api_tokens": [
+      {"name": "client-1", "token": "replace-with-strong-token"}
+    ]
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "file": null,
+    "console": true
+  }
+}

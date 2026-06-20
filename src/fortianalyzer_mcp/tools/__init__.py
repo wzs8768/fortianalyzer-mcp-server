@@ -1,0 +1,1 @@
+"""FortiAnalyzer MCP tools."""
