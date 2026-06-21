@@ -42,7 +42,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/dvmdb/adom")
             return self._format_list(result.get("result", []), "adoms")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def get_adom_detail(self, device_id: str, adom: str = "root") -> str:
         """Get detailed information about a specific ADOM.
@@ -56,7 +56,7 @@ class FazTools(BaseTool):
                 return self._format_success(rows[0])
             return self._format_error(f"ADOM '{adom}' not found")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def create_adom(
         self, device_id: str, name: str, mode: str = "normal",
@@ -73,7 +73,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/dvmdb/adom", data={"data": data}, method="add")
             return self._format_success(result.get("result", []), f"ADOM '{name}' created")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def delete_adom(self, device_id: str, name: str) -> str:
         """Delete an ADOM. ⚠ Cannot be undone.
@@ -84,7 +84,7 @@ class FazTools(BaseTool):
             result = await faz.execute(f"/dvmdb/adom/{name}", method="delete")
             return self._format_success(result.get("result", []), f"ADOM '{name}' deleted")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def list_adom_devices(self, device_id: str, adom: str = "root") -> str:
         """List all managed devices in an ADOM.
@@ -95,7 +95,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/dvmdb/device", extra_params={"adom": adom})
             return self._format_list(result.get("result", []), "devices")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def list_folders(self, device_id: str, adom: str = "root") -> str:
         """List device folders in an ADOM.
@@ -106,7 +106,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/dvmdb/folder", extra_params={"adom": adom})
             return self._format_list(result.get("result", []), "folders")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def list_device_groups(self, device_id: str, adom: str = "root") -> str:
         """List device groups in an ADOM.
@@ -117,7 +117,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/dvmdb/group", extra_params={"adom": adom})
             return self._format_list(result.get("result", []), "groups")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     # ═══════════════════════════════════════════════════════════════════
     # Event & Alert Management
@@ -141,7 +141,7 @@ class FazTools(BaseTool):
             alerts = result.get("result", [])
             return self._format_list(alerts[:limit], "alerts")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def get_alert_count(
         self, device_id: str, adom: str = "root",
@@ -156,7 +156,7 @@ class FazTools(BaseTool):
             )
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def list_incidents(
         self, device_id: str, adom: str = "root",
@@ -176,7 +176,7 @@ class FazTools(BaseTool):
             incidents = result.get("result", [])
             return self._format_list(incidents[:limit], "incidents")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def get_incident_count(
         self, device_id: str, adom: str = "root",
@@ -191,7 +191,7 @@ class FazTools(BaseTool):
             )
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     # ═══════════════════════════════════════════════════════════════════
     # Log View (async search, stats, log files)
@@ -219,7 +219,7 @@ class FazTools(BaseTool):
             )
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def get_log_files_state(
         self, device_id: str, adom: str = "root",
@@ -247,7 +247,7 @@ class FazTools(BaseTool):
             )
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def read_log_file(
         self, device_id: str, adom: str = "root",
@@ -283,7 +283,7 @@ class FazTools(BaseTool):
             )
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     # ═══════════════════════════════════════════════════════════════════
     # FortiView Analytics (async add→get flow)
@@ -357,7 +357,7 @@ class FazTools(BaseTool):
                         )
             return self._format_error("FortiView task timed out after 30s")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def get_fortiview_top_destinations(
         self, device_id: str, adom: str = "root",
@@ -405,7 +405,7 @@ class FazTools(BaseTool):
                         )
             return self._format_error("FortiView task timed out after 30s")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     # ═══════════════════════════════════════════════════════════════════
     # System Status & Info
@@ -420,7 +420,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/sys/status")
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def get_license_info(self, device_id: str) -> str:
         """Get FortiAnalyzer license information.
@@ -431,7 +431,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/fazsys/forticare/licinfo")
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def get_ha_status(self, device_id: str) -> str:
         """Get HA cluster status.
@@ -442,7 +442,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/sys/ha/status")
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def get_storage_info(self, device_id: str) -> str:
         """Get storage usage information.
@@ -453,7 +453,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/fazsys/storage-info")
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def get_system_performance(self, device_id: str) -> str:
         """Get system performance status (CPU/memory).
@@ -464,7 +464,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/fazsys/monitor/system/performance/status")
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def get_log_forward_status(self, device_id: str) -> str:
         """Get log forwarding server status.
@@ -475,7 +475,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/fazsys/monitor/logforward-status")
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     # ═══════════════════════════════════════════════════════════════════
     # Reports
@@ -494,7 +494,7 @@ class FazTools(BaseTool):
             )
             return self._format_list(result.get("result", []), "schedules")
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     # ═══════════════════════════════════════════════════════════════════
     # IOC
@@ -509,7 +509,7 @@ class FazTools(BaseTool):
             result = await faz.execute("/ioc/license/state")
             return self._format_success(result.get("result", [{}])[0])
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     # ═══════════════════════════════════════════════════════════════════
     # Generic Request — fallback for any endpoint
@@ -543,4 +543,4 @@ class FazTools(BaseTool):
             result = await faz.execute(url, data=data, extra_params=extra or None, method=method)
             return self._format_success(result.get("result", []))
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))

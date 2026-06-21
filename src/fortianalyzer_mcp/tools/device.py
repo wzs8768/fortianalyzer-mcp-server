@@ -55,7 +55,7 @@ class DeviceTools(BaseTool):
                 "status": status_data,
             })
         except (ValueError, FortiAnalyzerError) as e:
-            return self._format_error(str(e))
+            return self._format_faz_error(str(e))
 
     async def test_device_connection(self, device_id: str) -> str:
         """Test connection to a FortiAnalyzer device by performing a simple API call.
