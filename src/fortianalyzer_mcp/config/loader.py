@@ -48,7 +48,10 @@ def create_example_config(output_path: str | None = None) -> dict:
             Defaults to ``config/config.example.json``.
     """
     example = {
-        "_comment": "FortiAnalyzer MCP Server — 设备连接与服务器运行配置（示例，请复制为 config.json 后修改）",
+        "_comment": (
+            "FortiAnalyzer MCP Server — 设备连接与服务器运行配置"
+            "（示例，请复制为 config.json 后修改）"
+        ),
         "server": {
             "host": "0.0.0.0",
             "port": 8915,

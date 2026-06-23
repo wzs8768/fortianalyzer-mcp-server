@@ -76,7 +76,6 @@ class BaseTool:
         if not match:
             return message
         code = int(match.group(1))
-        raw_text = match.group(2)
         translation = cls._FAZ_ERROR_TRANSLATIONS.get(code)
         if translation:
             return f"{message}\n  → {translation}"

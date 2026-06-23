@@ -26,7 +26,10 @@ class DeviceConfig(BaseModel):
     port: int = Field(default=443, description="HTTPS port")
     username: str | None = Field(default=None, description="Admin username")
     password: str | None = Field(default=None, description="Admin password")
-    api_token: str | None = Field(default=None, description="API token (takes precedence over username/password)")
+    api_token: str | None = Field(
+        default=None,
+        description="API token (takes precedence over username/password)",
+    )
     adom: str = Field(default="root", description="Default ADOM")
     verify_ssl: bool = Field(default=True, description="Verify SSL certificate")
     timeout: int = Field(default=60, description="Request timeout in seconds")

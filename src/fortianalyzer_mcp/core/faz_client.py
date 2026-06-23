@@ -7,6 +7,7 @@ Dual authentication:
 - Session (username/password login) for log APIs (/log/*)
 """
 import asyncio
+import contextlib
 import logging
 import re
 
@@ -91,10 +92,8 @@ class FortiAnalyzerClient:
 
     async def disconnect(self):
         if self._client:
-            try:
+            with contextlib.suppress(Exception):
                 await self._logout()
-            except Exception:
-                pass
             await self._client.aclose()
             self._client = None
             self._connected = False
@@ -110,10 +109,8 @@ class FortiAnalyzerClient:
     async def _force_reconnect(self):
         logger.info("FAZ %s: forcing reconnect", self.host)
         if self._client:
-            try:
+            with contextlib.suppress(Exception):
                 await self._client.aclose()
-            except Exception:
-                pass
         self._client = None
         self._connected = False
         self._session_id = None
@@ -147,7 +144,8 @@ class FortiAnalyzerClient:
                 )
                 resp.raise_for_status()
                 result = resp.json()
-                r = result.get("result", [{}])[0] if isinstance(result.get("result"), list) else result.get("result", {})
+                result_val = result.get("result", {})
+                r = result_val[0] if isinstance(result_val, list) else result_val
                 code = r.get("status", {}).get("code", 0)
 
                 if code in (0, -11):
@@ -189,7 +187,10 @@ class FortiAnalyzerClient:
                 if session:
                     self._session_id = session
                     session_ok = True
-                    logger.info("FAZ %s: session login OK (user=%s)", self.host, self.username[:8] + "...")
+                    logger.info(
+                        "FAZ %s: session login OK (user=%s)",
+                        self.host, self.username[:8] + "...",
+                    )
                 else:
                     logger.warning(
                         "FAZ %s: session login failed — no session in response. Code: %s",
@@ -220,14 +221,12 @@ class FortiAnalyzerClient:
 
     async def _logout(self):
         if self._session_id:
-            try:
+            with contextlib.suppress(Exception):
                 await self._client.post(self.jsonrpc_url, json={
                     "jsonrpc": "2.0",
                     "method": "exec", "params": [{"url": "/sys/logout"}],
                     "session": self._session_id, "id": self._next_id(),
                 })
-            except Exception:
-                pass
         self._session_id = None
         self._bearer_token = None
 
@@ -274,7 +273,7 @@ class FortiAnalyzerClient:
                     )
                     await self._force_reconnect()
                     continue
-                raise FortiAnalyzerError(f"FAZ {self.host}: network error: {e}")
+                raise FortiAnalyzerError(f"FAZ {self.host}: network error: {e}") from e
 
     async def _execute_once(self, url, data=None, extra_params=None, method="get"):
         """Single JSON-RPC request — uses session auth for /log/*, Bearer otherwise."""

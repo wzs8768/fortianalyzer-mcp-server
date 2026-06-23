@@ -15,7 +15,6 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Optional, Dict
 
 # Make src/ importable without pip install (systemd service, CI)
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
@@ -27,7 +26,9 @@ except ImportError:
     try:
         from mcp.server.fastmcp import FastMCP
     except ImportError:
-        raise RuntimeError("FastMCP is not available. Please install 'fastmcp' or 'mcp' package.")
+        raise RuntimeError(
+            "FastMCP is not available. Please install 'fastmcp' or 'mcp' package."
+        ) from None
 
 from fortianalyzer_mcp.config.loader import load_config
 from fortianalyzer_mcp.config.models import AppConfig, DeviceConfig
