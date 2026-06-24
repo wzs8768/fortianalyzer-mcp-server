@@ -54,7 +54,7 @@ class BaseTool:
 
     # FAZ error codes → user-friendly messages
     _FAZ_ERROR_TRANSLATIONS = {
-        -9:  "ADOM 管理功能未启用（当前 FAZ 设备未开启 Administrative Domains 功能）",
+        -9:  "命令对该 URL 无效（ADOM 功能未启用，或请求数据格式不正确）",
         -3:  "对象不存在",
         -11: "权限不足（当前认证方式无权访问此 API，尝试使用其他账号或开启对应权限）",
         -1:  "操作被拒绝",

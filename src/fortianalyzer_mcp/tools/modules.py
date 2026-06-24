@@ -70,7 +70,7 @@ class FazTools(BaseTool):
             data = [{"name": name, "mode": mode}]
             if description:
                 data[0]["description"] = description
-            result = await faz.execute("/dvmdb/adom", data={"data": data}, method="add")
+            result = await faz.execute("/dvmdb/adom", data=data, method="add")
             return self._format_success(result.get("result", []), f"ADOM '{name}' created")
         except (ValueError, FortiAnalyzerError) as e:
             return self._format_faz_error(str(e))
