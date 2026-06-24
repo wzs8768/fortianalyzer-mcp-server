@@ -309,11 +309,8 @@ async def main():
     host = args.host or cfg.server.host
     port = args.port or cfg.server.port
 
-    # Determine scheme before creating manager (needed for FAZ client)
-    use_ssl = bool(args.ssl_cert and args.ssl_key)
-
-    # Init device connections
-    manager = FortiAnalyzerManager(cfg, use_ssl=use_ssl)
+    # Init device connections (FAZ is always HTTPS)
+    manager = FortiAnalyzerManager(cfg, use_ssl=True)
     await manager.start()
 
     # Build server with tools
